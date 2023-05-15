@@ -139,16 +139,16 @@ public ResponseEntity<String> putImageExp(long id, MultipartFile imagen) throws 
     BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
 
     try {
-        // Generar un nombre único para la imagen
+        
         String nombreImagen = "exp_" + experiencia.getId() + "_" + UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(imagen.getOriginalFilename());
 
-        // Obtener el BlobClient para el nuevo blob
+        
         BlobClient blobClient = containerClient.getBlobClient(nombreImagen);
 
-        // Cargar la imagen al blob
+        
         blobClient.upload(imagen.getInputStream(), imagen.getSize());
 
-        // Actualizar la URL de la imagen de la experiencia en la base de datos
+        
         experiencia.setLogoEmpresa(blobClient.getBlobUrl());
         repo.save(experiencia);
     } catch (IOException | BlobStorageException ex) {

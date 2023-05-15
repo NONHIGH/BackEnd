@@ -24,14 +24,13 @@ import com.api.portfolio.services.IUsuarioService;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/open")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://portfolio-arg-pro-9f98f.web.app")
 public class AuthenticationController {
 
     private final UsuarioRepository repo;

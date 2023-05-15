@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/edu")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("https://portfolio-arg-pro-9f98f.web.app")
 public class EducacionController {
 
     private final IUsuarioService iUsuario;

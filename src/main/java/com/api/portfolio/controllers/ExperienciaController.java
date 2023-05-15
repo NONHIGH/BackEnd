@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/exp")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("https://portfolio-arg-pro-9f98f.web.app")
 public class ExperienciaController {
     
     private final IExperienciaService iExperiencia;
