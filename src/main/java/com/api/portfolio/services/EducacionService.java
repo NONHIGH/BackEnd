@@ -1,6 +1,7 @@
 package com.api.portfolio.services;
 
 import com.api.portfolio.entities.Educacion;
+import com.api.portfolio.entities.Response;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -12,19 +13,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.api.portfolio.entities.Usuario;
 import com.api.portfolio.exceptions.createDirectory.CreatingDirectoryImageException;
 import com.api.portfolio.repository.EducacionRepository;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.models.BlobStorageException;
+import io.micrometer.common.util.StringUtils;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -33,7 +31,10 @@ public class EducacionService implements IEducacionService {
 
     private final EducacionRepository repo;
     private final IUsuarioService usuarioService;
-    private final String root_folder = "src/main/resources/static/userImage/";
+
+    String connectionString = "DefaultEndpointsProtocol=https;AccountName=imagenesangel;AccountKey=cP2YI4Y07S2SdvZaXnqU0lOaEUISqDXDzKkOFaVrgPTLymnQEp46MPqL4JF1OJCtaSQBCmhO7CpG+AStSn7HZA==;EndpointSuffix=core.windows.net";
+    String containerName = "files";
+    String defaultImageName = "default.png";
 
     @Override
     public ResponseEntity<Educacion> findById(long id) {
@@ -97,55 +98,61 @@ public class EducacionService implements IEducacionService {
     }
 
     @Override
-    public ResponseEntity<Resource> getImageEdu(long idEdu) {
+    public ResponseEntity<?> getImageEdu(long idEdu) {
         Optional<Educacion> found = repo.findById(idEdu);
         if (!found.isPresent()) {
-            return ResponseEntity.unprocessableEntity().build();
+            return ResponseEntity.notFound().build();
         }
-        String pathImage = found.get().getLogo();
-        Resource resource = null;
-        if (pathImage == null) {
-            resource = new ClassPathResource("static/defaultEdu/default.png");
-        } else {
-            Path path = Paths.get(pathImage);
-            try {
-                resource = new UrlResource(path.toUri());
-            } catch (MalformedURLException e) {
-                throw new RuntimeException("Ha ocurrido un error al intentar obtener la imagen, Mesaje de error: " + e.getMessage());
-            }
+        String pathImagen = found.get().getLogo();
+        if (StringUtils.isEmpty(pathImagen)) {
+        
+        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().connectionString(connectionString).buildClient();
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
+
+        
+        BlobClient defaultImageBlobClient = containerClient.getBlobClient(defaultImageName);
+        if (!defaultImageBlobClient.exists()) {
+            
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(resource);
+
+        String defaultImageUrl = defaultImageBlobClient.getBlobUrl();
+
+        return ResponseEntity.ok().body(new Response(defaultImageUrl));
+    } else {
+        
+        return ResponseEntity.ok().body(new Response(pathImagen));
+    }
     }
 
     @Override
-    public ResponseEntity<?> putImageEdu(long idEdu, MultipartFile imagen) throws CreatingDirectoryImageException {
-        Optional<Educacion> found = repo.findById(idEdu);
-        if (!found.isPresent()) {
-            return ResponseEntity.unprocessableEntity().build();
+    public ResponseEntity<?> putImageEdu(long id, MultipartFile imagen) throws CreatingDirectoryImageException {
+        Optional<Educacion> expFound = repo.findById(id);
+        if (!expFound.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-        Educacion educacion = found.get();
-        if(educacion.getLogo() == null) {
-            try {
-                String nombreImagen = "edu_" + educacion.getId() + "_" + UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(imagen.getOriginalFilename());
-                
-                Path eduImageFolder = Paths.get(root_folder, "edu_image", Long.toString(educacion.getId()));
-                Files.createDirectory(eduImageFolder);
-                Path eduImagePath = eduImageFolder.resolve(nombreImagen);
-                Files.write(eduImagePath, imagen.getBytes());
-                
-                educacion.setLogo(eduImagePath.toString());
-                repo.save(educacion);
-            } catch (IOException e) {
-                throw new CreatingDirectoryImageException("No se pudo crear el directoria para la imagen. Mensaje de error: ", e);
-            }
-        } else {
-            try {
-                Path eduImagePath = Paths.get(educacion.getLogo());
-                Files.write(eduImagePath, imagen.getBytes());
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo almacenar la imagen en el directorio");
-            }
+
+        Educacion educacion = expFound.get();
+        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder().connectionString(connectionString).buildClient();
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
+
+        try {
+            
+            String nombreImagen = "edu_" + educacion.getId() + "_" + UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(imagen.getOriginalFilename());
+
+            
+            BlobClient blobClient = containerClient.getBlobClient(nombreImagen);
+
+            
+            blobClient.upload(imagen.getInputStream(), imagen.getSize());
+
+            
+            educacion.setLogo(blobClient.getBlobUrl());
+            repo.save(educacion);
+        } catch (IOException | BlobStorageException ex) {
+            throw new CreatingDirectoryImageException("No se pudo crear el directorio de imágenes de la educaciones", (IOException) ex);
         }
+
         return ResponseEntity.ok().build();
     }
 

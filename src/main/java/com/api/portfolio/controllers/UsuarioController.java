@@ -3,7 +3,9 @@ package com.api.portfolio.controllers;
 import com.api.portfolio.entities.Usuario;
 import com.api.portfolio.exceptions.createDirectory.CreatingDirectoryImageException;
 import com.api.portfolio.services.IUsuarioService;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import java.io.InputStream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+
 
 @RestController
 @RequestMapping("/api/user")
@@ -62,7 +75,12 @@ public class UsuarioController {
     public ResponseEntity<?> putUserLastName(@PathVariable long id, @RequestBody String nuevoApellido){
         return userService.putUserLastName(id, nuevoApellido);
     }
-    
+
     
     
 }
+
+
+
+    
+

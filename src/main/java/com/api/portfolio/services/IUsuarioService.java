@@ -31,4 +31,5 @@ public interface IUsuarioService {
     public ResponseEntity<?> actualizarImagenUsuario(long id, MultipartFile imagen) throws CreatingDirectoryImageException;
     
     
+    
 }

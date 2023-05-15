@@ -7,7 +7,6 @@ import com.api.portfolio.services.IEducacionService;
 import com.api.portfolio.services.IUsuarioService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,7 +69,7 @@ public class EducacionController {
     }
     
     @GetMapping("/getImageEdu/{idExp}")
-    public ResponseEntity<Resource> getImageEdu(@PathVariable long idExp){
+    public ResponseEntity<?> getImageEdu(@PathVariable long idExp){
         return iEdu.getImageEdu(idExp);
     }
 

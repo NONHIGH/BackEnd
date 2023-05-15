@@ -86,7 +86,7 @@ public class AuthenticationController {
         }
         
         @GetMapping("/mainImageExp/{idExp}")
-        public ResponseEntity<Resource> getImageExp(@PathVariable long idExp){
+        public ResponseEntity<?> getImageExp(@PathVariable long idExp){
             return expService.getImageExpById(idExp);
         }
         
@@ -96,7 +96,7 @@ public class AuthenticationController {
         }
         
         @GetMapping("/mainImageEdu/{idEdu}")
-        public ResponseEntity<Resource> getImageEdu(@PathVariable long idEdu){
+        public ResponseEntity<?> getImageEdu(@PathVariable long idEdu){
             return eduService.getImageEdu(idEdu);
         }
 }

@@ -17,7 +17,6 @@ import com.api.portfolio.exceptions.createDirectory.CreatingDirectoryImageExcept
 import com.api.portfolio.services.IExperienciaService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,7 +58,7 @@ public class ExperienciaController {
     }
     
     @GetMapping("/getImageExp/{idExp}")
-    public ResponseEntity<Resource> getImageExperience(@PathVariable long idExp){
+    public ResponseEntity<?> getImageExperience(@PathVariable long idExp){
         return iExperiencia.getImageExpById(idExp);
     }
     

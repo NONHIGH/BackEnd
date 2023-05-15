@@ -55,8 +55,7 @@ public class Usuario implements UserDetails {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Experiencia> experiencias;
-    
-    
+
     
     
     @Override
