@@ -17,14 +17,14 @@ import com.api.portfolio.exceptions.createDirectory.CreatingDirectoryImageExcept
 import com.api.portfolio.services.IExperienciaService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
+//import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/exp")
 @RequiredArgsConstructor
-@CrossOrigin("https://portfolio-arg-pro-9f98f.web.app")
+//@CrossOrigin(origins = "https://proyecto-5c92b.web.app")
 public class ExperienciaController {
     
     private final IExperienciaService iExperiencia;

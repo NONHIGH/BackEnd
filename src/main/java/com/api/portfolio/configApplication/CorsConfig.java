@@ -1,7 +1,6 @@
 package com.api.portfolio.configApplication;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -10,20 +9,13 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        
-        registry.addMapping("/api/**")
-                .allowedOrigins("*")
-                .allowedMethods("*")
-                .exposedHeaders(HttpHeaders.SET_COOKIE)
-                .allowCredentials(true)
-                .maxAge(3600)
-                ;
-        registry.addMapping("/api/open/**")
+        registry.addMapping("/**")
                 .allowedOriginPatterns("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
     }
 }
+
 
