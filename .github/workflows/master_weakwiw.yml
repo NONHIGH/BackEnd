@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'weakwiw'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_379F378FAD5B42729112C76E56B3F5C9 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_655F0A1CF4024758B35A38E14B4827D4 }}
           package: '*.jar'
