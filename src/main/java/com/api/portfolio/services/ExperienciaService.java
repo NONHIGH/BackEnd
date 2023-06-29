@@ -32,10 +32,10 @@ public class ExperienciaService implements IExperienciaService {
     private final ExperienciaRepository repo;
     private final IUsuarioService usuarioService;
     
-    String connectionString = "DefaultEndpointsProtocol=https;AccountName=imagenesangel;AccountKey=cP2YI4Y07S2SdvZaXnqU0lOaEUISqDXDzKkOFaVrgPTLymnQEp46MPqL4JF1OJCtaSQBCmhO7CpG+AStSn7HZA==;EndpointSuffix=core.windows.net";
-    String containerName = "files";
-    String defaultImageName = "default.png";
+    String connectionString = "DefaultEndpointsProtocol=https;AccountName=filestorage1110;AccountKey=EuqxmXMC1mLwPni08YBu+kQP7mEyZnOAY4W+vmR4+ntD8lAhYe9CEiimgVMpCAsICl/HH8Ni/0s6+AStCkKhbg==;EndpointSuffix=core.windows.net";
 
+    String containerName = "container";
+    String defaultImageName = "default.png";
     
     @Override
     public ResponseEntity<Experiencia> findById(long id) {

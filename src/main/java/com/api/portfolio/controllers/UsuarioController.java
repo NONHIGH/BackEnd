@@ -5,7 +5,6 @@ import com.api.portfolio.exceptions.createDirectory.CreatingDirectoryImageExcept
 import com.api.portfolio.services.IUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "https://proyecto-5c92b.web.app")
 public class UsuarioController {
     
     private final IUsuarioService userService;
